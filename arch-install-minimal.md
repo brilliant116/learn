@@ -1,4 +1,4 @@
-
+```
 cfdisk /dev/sda
 
 mkfs.ext4 /dev/sda1
@@ -104,14 +104,19 @@ reboot
 sudo nano /etc/pacman.conf
 
 [archlinuxcn]
-Server = <https://mirrors.bfsu.edu.cn/archlinuxcn/$arch>
+Server = https://mirrors.bfsu.edu.cn/archlinuxcn/$arch
 
 sudo pacman -Sy archlinuxcn-keyring
 
-sudo pacman -S fcitx-im fcitx-configtool fcitx-googlepinyin fcitx-cloudpinyin
+sudo pacman -S fcitx5 fcitx5-chinese-addons fcitx5-chewing
+sudo pacman -S fcitx5-qt fcitx5-gtk
+sudo pacman -S fcitx5-pinyin-zhwiki fcitx5-pinyin-moegirl
+sudo pacman -S fcitx5-configtool
 
-nano ~/.xprofile
+~/.xprofile
 
-export GTK_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS="@im=fcitx"
+INPUT_METHOD  DEFAULT=fcitx5
+GTK_IM_MODULE DEFAULT=fcitx5
+QT_IM_MODULE  DEFAULT=fcitx5
+XMODIFIERS    DEFAULT=\@im=fcitx5
+```

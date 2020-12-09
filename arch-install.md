@@ -443,21 +443,31 @@ Server = https://mirrors.bfsu.edu.cn/archlinuxcn/$arch
 sudo pacman -Sy archlinuxcn-keyring
 ```
 
-使用谷歌拼音输入法
+Fcitx5 输入法
 
 ```
-sudo pacman -S fcitx-im fcitx-configtool fcitx-googlepinyin fcitx-cloudpinyin
+sudo pacman -S fcitx5 fcitx5-chinese-addons fcitx5-chewing #安装中文输入法
+sudo pacman -S fcitx5-qt fcitx5-gtk #输入法模块
+sudo pacman -S fcitx5-pinyin-zhwiki fcitx5-pinyin-moegirl #输入法词库
+sudo pacman -S fcitx5-configtool #配置工具
 ```
 
-输入方法加上谷歌拼音，配置里的云拼音来源改为百度。
-
-新建`~/.xprofile`，添加
+edit `~/.xprofile`
 
 ```
-export GTK_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS="@im=fcitx"
+INPUT_METHOD  DEFAULT=fcitx
+GTK_IM_MODULE DEFAULT=fcitx
+QT_IM_MODULE  DEFAULT=fcitx
+XMODIFIERS    DEFAULT=\@im=fcitx
 ```
+
+开始菜单中打开 Fcitx 5 Configuration, 点击add input method, pinyin 添加到美式键盘下面，将激活输入法和切换快捷键设置为 Left Shift。
+
+```
+sudo pacman -S fcitx5-material-color
+```
+
+在 Fcitx 5 Configuration 的 Addons → UI → Classic User Inteface → Theme 中设置即可，字体可以设置为 Noto Sans 12, teal color。Cloud Pinyin：Backend 下拉菜单中选择 Baidu
 
 #### NVIDIA
 
