@@ -84,14 +84,14 @@ lsblk
 | Mount point           | Partition | Partition type       | Suggested Size         |
 | --------------------- | --------- | -------------------- | ---------------------- |
 | /mnt/boot or /mnt/efi | dev/sdx1  | EFI system partition | 260-512MiB             |
-| [SWAP]                | dev/sdx2  | Linux swap           | More than 512 MiB      |
+| SWAP                  | dev/sdx2  | Linux swap           | More than 512 MiB      |
 | /mnt                  | dev/sdx3  | Linux x86_64 root(/) | Remainer of the device |
 
 swap主要是系统休眠用的，一般可以不用
 
 ```
 cfdisk /dev/sda
-fisk /dev/sda
+fdisk /dev/sda
 ```
 
 ```
@@ -100,9 +100,9 @@ mkfs.ext4 /dev/nvme0n1p2
 ```
 
 ```
-mount /dev/nvme0n1p1 /mnt/boot
-mkdir /mnt/boot
 mount /dev/nvme0n1p2 /mnt
+mkdir /mnt/boot
+mount /dev/nvme0n1p1 /mnt/boot
 ```
 
 分区设置是UEFI+GPT，对硬盘分为四个区域，具体划分如下
@@ -208,6 +208,7 @@ nano /etc/pacman.d/mirrorlist
 在`/etc/pacman.d/mirrorlist`的最前面添加
 
 ```
+Server = https://mirrors.hit.edu.cn/archlinux/$repo/os/$arch
 Server = https://mirrors.bfsu.edu.cn/archlinux/$repo/os/$arch
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
 ```
@@ -239,6 +240,7 @@ UUID=...    /boot      fat     defaults,noatime     0 2
 UUID=...    /          ext4    defaults,noatime     0 1
 ```
 
+---
 Tip: After installing Arch, you can also change the `/etc/fstab` file.
 
 ```
@@ -251,6 +253,7 @@ sudo mount -a
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
+---
 改变root到新系统
 
 ```
@@ -368,7 +371,7 @@ EDITOR=nano visudo
 reboot
 ```
 
-#### 安装图形化界面
+#### 安装桌面环境
 
 KDE plasma
 
@@ -380,12 +383,18 @@ sudo pacman -S xorg-server
 ```
 sudo pacman -S plasma-desktop dolphin konsole
 
-sudo pacman -S plasma-meta konsole chromium firefox
-sudo pacman -S alacritty kitty
+sudo pacman -S plasma-meta konsole
 ```
 
 ```
 sudo systemctl enable sddm
+```
+
+GNOME
+
+```
+sudo pacman -S gnome
+sudo systemctl enable gdm
 ```
 
 XFCE
@@ -393,15 +402,27 @@ XFCE
 ```
 sudo pacman -S xorg
 sudo pacman -S xfce4
-sudo pacman -S xfce4-goodies
 ```
 
 ```
-# lightdm
-sudo pacman -S lightdm lightdm-gtk-greeter
-sudo systemctl enable lightdm
+sudo pacman -S lightdm
+sudo pacman -S lightdm-webkit-theme-litarvan
+```
 
-# lxdm
+```
+ls /usr/share/xgreeters/
+```
+
+`/etc/lightdm/lightdm.conf`
+
+```
+[Seat:*]
+...
+greeter-session=lightdm-webkit-theme-litarvan
+...
+```
+
+```
 sudo pacman -S lxdm
 sudo systemctl enable lxdm
 ```
@@ -450,9 +471,10 @@ sudo pacman -S fcitx5 fcitx5-chinese-addons fcitx5-chewing #安装中文输入�
 sudo pacman -S fcitx5-qt fcitx5-gtk #输入法模块
 sudo pacman -S fcitx5-pinyin-zhwiki fcitx5-pinyin-moegirl #输入法词库
 sudo pacman -S fcitx5-configtool #配置工具
+sudo pacman -S fcitx5-material-color
 ```
 
-edit `~/.xprofile`
+edit `~/.pam_environment`
 
 ```
 INPUT_METHOD  DEFAULT=fcitx
@@ -461,13 +483,21 @@ QT_IM_MODULE  DEFAULT=fcitx
 XMODIFIERS    DEFAULT=\@im=fcitx
 ```
 
+or edit `~/.xprofile`
+
+```
+export GTK_IM_MODULE=fcitx5
+export XMODIFIERS=@im=fcitx5
+export QT_IM_MODULE=fcitx5
+```
+
 开始菜单中打开 Fcitx 5 Configuration, 点击add input method, pinyin 添加到美式键盘下面，将激活输入法和切换快捷键设置为 Left Shift。
 
-```
-sudo pacman -S fcitx5-material-color
-```
-
 在 Fcitx 5 Configuration 的 Addons → UI → Classic User Inteface → Theme 中设置即可，字体可以设置为 Noto Sans 12, teal color。Cloud Pinyin：Backend 下拉菜单中选择 Baidu
+
+```
+sudo pacman -S alacritty kitty
+```
 
 #### NVIDIA
 

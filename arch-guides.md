@@ -1,3 +1,22 @@
+### LightDM
+
+```
+sudo pacman -S lightdm
+sudo pacman -S lightdm-webkit-theme-litarvan
+```
+
+```
+ls /usr/share/xgreeters/
+```
+
+`/etc/lightdm/lightdm.conf`
+
+```
+[Seat:*]
+...
+greeter-session=lightdm-webkit-theme-litarvan
+...
+```
 
 ### CUDA, tensorflow, pytorch
 
@@ -137,7 +156,104 @@ defaults.ctl.card 1
 系统字体的配置文件为`/etc/fonts/fonts.conf`。在系统安装字体`/usr/share/fonts`，在用户安装字体`~/.local/share/fonts` (`~/.fonts` is already deprecated.)
 使用`fc-cache -fv`刷新缓存。
 
-### btrfs
+### Btrfs
+
+```
+btrfs subvolume create /path/to/subvolume
+btrfs subvolume list -p path
+btrfs subvolume delete /path/to/subvolume
+```
+
+1.
+
+```
+mkfs.fat -F32 /dev/sda1
+mkfs.btrfs -L arch /dev/sda2
+
+mount /dev/sda2 /mnt
+cd /mnt
+
+btrfs subvolume create _active
+btrfs subvolume create _active/rootvol
+btrfs subvolume create _active/homevol
+btrfs subvolume create _active/tmp
+btrfs subvolume create _snapshots
+
+cd ..
+umount /mnt
+
+mount -o subvol=_active/rootvol /dev/sda2 /mnt
+
+mkdir /mnt/{home,tmp,boot}
+mkdir /mnt/boot/efi
+mkdir /mnt/mnt/defvol
+
+mount -o subvol=_active/tmp /dev/sda2 /mnt/tmp
+mount /dev/sda1 /mnt/boot/efi
+mount -o subvol=_active/homevol /dev/sda2 /mnt/home
+mount -o subvol=/ /dev/sda2 /mnt/mnt/defvol
+```
+
+2.
+
+```
+mkfs.fat -F32 /dev/nvme0n1p1
+mkfs.btrfs -m single -L arch /dev/nvme0n1p2
+
+mount -o compress=lzo /dev/nvme0n1p2 /mnt
+
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@tmp
+btrfs subvolume create /mnt/@snapshots
+
+umount /mnt
+
+mount -o noatime,nodiratime,compress=lzo,subvol=@ /dev/nvme0n1p2 /mnt
+mkdir -p /mnt/{btrfs-root,boot/efi,home,tmp,.snapshots}
+mount -o noatime,nodiratime,compress=lzo,subvol=@home /dev/nvme0n1p2 /mnt/home
+mount -o noatime,nodiratime,compress=lzo,subvol=@tmp /dev/nvme0n1p2 /mnt/tmp
+mount -o noatime,nodiratime,compress=lzo,subvol=@snapshots /dev/nvme0n1p2 /mnt/.snapshots
+mount -o noatime,nodiratime,compress=lzo,subvol=/ /dev/nvme0n1p2 /mnt/btrfs-root
+
+mount /dev/nvme0n1p1 /mnt/boot/efi
+```
+
+3.
+
+```
+mkfs.fat -F32 /dev/nvme0n1p1
+mkfs.btrfs -L System /dev/nvme0n1p2
+
+挂载
+
+mount /dev/nvme0n1p2 /mnt
+
+创建subvolume
+
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+
+@是根目录
+
+查看目录
+
+ls -l /mnt
+
+挂载subvolume和EFI分区
+
+# subvolume
+umount /mnt
+mount -o noatime,nodiratime,subvol=@ /dev/nvme0n1p2 /mnt
+mkdir /mnt/home
+mount -o noatime,nodiratime,subvol=@home /dev/nvme0n1p2 /mnt/home
+# EFI
+mkdir /mnt/boot
+mkdir /mnt/boot/efi
+mount /dev/nvme0n1p1 /mnt/boot/efi
+```
+
+4.
 
 ```
 cfdisk /dev/sda
@@ -157,6 +273,34 @@ mount -o defaluts,noatime,ssd,nodiratime,subvol=@home /dev/sda2 /mnt/home
 mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot/
 ```
+
+5.
+
+```
+格式化分区sda4
+
+mkfs.btrfs -f /dev/sda4
+挂载分区
+
+mount /dev/sda4 /mnt
+进入mnt目录，创建子卷
+
+cd /mnt
+btrfs subvol create rootfs
+btrfs subvol create homefs
+
+回到根目录，并挂载子卷及EFI分区
+
+cd ..
+umount /dev/sda4
+mount /dev/sda4 /mnt -o subvol=rootfs,compress-force=lzo,noatime,autodefrag,space_cache
+mkdir /mnt/home
+mount /dev/sda4 /mnt/home -o subvol=homefs,compress-force=lzo,noatime,autodefrag,space_cache
+mkdir -p /mnt/boot/efi
+mount /dev/sda1 /mnt/boot/efi
+```
+
+固态硬盘,subvol项目后命令，需更改为:compress=lzo,noatime,discard,sdd,space_cache
 
 ```
 nano /etc/mkinitcpio.conf
