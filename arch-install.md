@@ -382,7 +382,9 @@ sudo pacman -S xorg-server
 
 ```
 sudo pacman -S plasma-desktop dolphin konsole
+```
 
+```
 sudo pacman -S plasma-meta konsole
 ```
 
@@ -431,9 +433,7 @@ sudo systemctl enable lxdm
 reboot
 ```
 
-如果无法进入桌面
-
-`/usr/lib/modprobe.d/blacklist-nouveau.conf` or `/etc/modprobe.d/blacklist-nouveau.conf`
+如果无法进入桌面,edit `/usr/lib/modprobe.d/blacklist-nouveau.conf` or `/etc/modprobe.d/blacklist-nouveau.conf`
 
 ```
 blacklist nouveau
@@ -464,7 +464,7 @@ Server = https://mirrors.bfsu.edu.cn/archlinuxcn/$arch
 sudo pacman -Sy archlinuxcn-keyring
 ```
 
-Fcitx5 输入法
+#### Fcitx5 输入法
 
 ```
 sudo pacman -S fcitx5 fcitx5-chinese-addons fcitx5-chewing #安装中文输入法
@@ -860,7 +860,7 @@ blacklist nouveau
 
 #### 安装Arch Linux后的屏幕分辨率太低
 
-解决Arch Linux后的屏幕分辨率太低，同时在VMware Worksation中使用粘贴、复制、拖拽等功能
+安装Arch Linux虚拟机后，屏幕分辨率低，并在VMware Worksation中使用粘贴、复制、拖拽等功能
 
 ```
 sudo pacman -S open-vm-tools xf86-input-vmmouse xf86-video-vmware gtkmm3 gtkmm gtk2
@@ -877,7 +877,6 @@ sudo systemctl start vmware-vmblock-fuse.service
 sudo nano /etc/mkinitcpio.conf
 ------------------------------
 MODULES=(vsock vmw_vsock_vmci_transport vmw_balloon vmw_vmci vmwgfx)
-
 ```
 
 ```
@@ -938,7 +937,7 @@ options psmouse proto=imps
 
 #### 驱动问题
 
-发现 GNOME 无 Wi-Fi 显示，蓝牙无法开启，缺少驱动。Google 并根据 Wiki 的相关命令查看，发现笔记本是很坑的博通 BCM43142 芯片，无线 + 蓝牙二合一。
+发现 GNOME 无 Wi-Fi 显示，蓝牙无法开启，缺少驱动。Google 并根据 Wiki 的相关命令查看，发现笔记本是很坑的博通 BCM43142 芯片，无线、蓝牙二合一。
 
 无线
 首先，根据 Wiki 查看芯片的信息：

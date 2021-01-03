@@ -1,3 +1,47 @@
+### 声音
+
+```
+sudo pacman -S alsa-utils
+```
+
+ThinkPad X240默认识别两个声卡，把HDMI通道的声卡设置成为默认，这里如果想使用笔记本上的声卡，把PCH设置成默认，添加启动加载文件:
+//TODO look pcm
+
+```
+nano /etc/modprobe.d/alsa-base.conf
+```
+
+添加如下代码设置:
+
+```
+# Set pcm is default sound card
+options snd_pcm index=0
+options snd_hda_intel index=1
+```
+
+重新启动，PCH声卡就变成默认声卡了。
+
+### Proxychains
+
+很多时候应用不支持代理或者某些代理方式，Proxychains是一个将socks5等代理类全局化的工具。安装:
+
+```
+sudo pacman -S proxychains-ng
+```
+
+修改配置文件/etc/proxychains.conf
+
+```
+# 修改最后一行
+socks5 127.0.0.1 1080
+```
+
+然后就可以在Terminal中使用它让xxx应用走socks5代理:
+
+```
+proxychains xxx
+```
+
 ### LightDM
 
 ```

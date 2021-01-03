@@ -90,7 +90,7 @@ uninstall racket
 rm -r /home/smith/racket
 ```
 
-- download via curl, wget
+#### download via curl, wget
 
 ```
 curl -O https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz
@@ -101,7 +101,7 @@ curl -L -o elm.gz https://github.com/elm/compiler/releases/download/0.19.1/binar
 gunzip elm.gz
 ```
 
-- chmod
+#### chmod
 
 ```
 ls -l
@@ -158,7 +158,7 @@ df -h
 查看文件夹里所有文件的大小总和
 
 ```
-du -sh /home
+du -sh /path/to/folder
 ```
 
 ### some essential packages in Linux distribution
@@ -299,6 +299,10 @@ chmod +x file.sh
 ./file.sh
 ```
 
+```
+sh file.sh
+```
+
 输出环境变量
 
 ```
@@ -309,8 +313,8 @@ printenv
 
 ```
 tar xzvf tar.gz
-tar xjvf tar.bz2
 tar xJvf tar.xz
+tar xjvf tar.bz2
 ```
 
 -z, --gzip, --gunzip, --ungzip: Filter the archive through gzip(1).
@@ -318,6 +322,26 @@ tar xJvf tar.xz
 -j, --bzip2: Filter the archive through bzip2(1).
 
 -J, --xz: Filter the archive through xz(1).
+
+### xz
+
+  -z, --compress      强制压缩
+  -d, --decompress    强制解压
+  -t, --test          测试压缩文件完整性
+  -l, --list          列出有关文件的信息
+  -k, --keep          保留（不删除）输入文件
+  -v, --verbose       详细；为更详细的内容指定两次
+
+```
+xz -z test.txt      # 压缩文件
+xz test.txt         # 压缩文件
+xz -d test.txt.xz   # 解压文件
+unxz test.txt.xz    # 解压文件
+```
+
+```
+xz -dk guix-system-install-1.2.0.x86_64-linux.iso.xz
+```
 
 ### Node.js
 
@@ -350,10 +374,10 @@ npx -v
 
 ### fonts
 
-系统字体的配置文件为`/etc/fonts/fonts.conf`。在系统安装字体`/usr/share/fonts`，在用户安装字体`~/.local/share/fonts` (`~/.fonts` is already deprecated.)
+系统字体的配置文件为`/etc/fonts/fonts.conf`。system fonts `/usr/share/fonts`，user fonts `~/.local/share/fonts` (`~/.fonts` is already deprecated.)
 
 ```
-fc-cache -fv
+fc-cache -v
 ```
 
 ### VS Code

@@ -108,6 +108,7 @@ ping gentoo.org
 
 ```
 rc-service sshd start
+
 /et/init.d/sshd start
 ```
 
@@ -161,7 +162,6 @@ links https://mirrors.bfsu.edu.cn/gentoo/
 
 ```
 tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
-tar xpvf stage3-amd64-20200909T214504Z.tar.xz --xattrs-include='*.*' --numeric-owner
 ```
 
 x for extract, p for preserve permission, v for verbose and f to denote that we want to extract a file(not standard input)
@@ -184,7 +184,9 @@ lspci | grep -i VGA
 lspci | grep -i audio
 ```
 
+```
 emerge -a sys-kernel/linux-firmware
+```
 
 ```
 nano -w /mnt/gentoo/etc/portage/make.conf
@@ -232,7 +234,10 @@ INPUT_DEVICES="libinput synaptics"
 
 ```
 mkdir --parents /mnt/gentoo/etc/portage/repos.conf
+mkdir -p /mnt/gentoo/etc/portage/repos.conf
+```
 
+```
 cp /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
 ```
 

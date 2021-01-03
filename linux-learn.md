@@ -1,3 +1,61 @@
+### 优化 Grub 显示
+
+Grub 实际的配置文件是由多个配置自动生成的，所以这里需要修改多个文件
+
+1. 修改 Grub 分辨率
+
+Grub 默认会使用硬件能够输出的最小分辨率，导致 Grub 界面模糊
+
+查看显卡在 Grub 中能够输出的分辨率
+
+```
+sudo hwinfo --framebuffer
+```
+
+笔者该命令的输出中，最大分辨率 1920x1080x32
+
+修改`/etc/default/grub`，显示分辨率为刚才查询到的最大分辨率
+
+```
+GRUB_GFXMODE=1920x1080x32
+```
+
+2. 修改 Grub 中显示的操作系统顺序
+
+`/etc/grub.d/` 目录中存放的是 Grub 能够引导的操作系统的配置文件，按照 启动顺序_操作系统名 生成实际的启动顺序
+
+将第一启动项修改为 Windows，把`30_os-prober`文件前的数字改到小于 `10_linux` 即可
+
+注意：该目录下有一些需要在所有操作系统前启动的配置，例如 `00_header` 和 05_debian_theme，修改的数字要大于这些
+
+### view logs
+
+Use `journalctl` command to view system information.
+
+view all collected journal entries
+
+```
+journalctl
+```
+
+To view a logs related to a specific file, you can provide the journalctl command with a filepath. The example shown below shows all logs of the kernel device node `/dev/sda`:
+
+```
+journalctl /dev/sda
+```
+
+To view log for the current boot use the `-b` option :
+
+```
+journalctl -b
+```
+
+To view kernel logs for the current boot, you can add the `-k` option:
+
+```
+journalctl -k -b -1
+```
+
 ### install python
 
 ```
